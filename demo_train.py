@@ -12,14 +12,12 @@ import torch.optim as optim
 import torch.optim.lr_scheduler as lr_scheduler
 from torch.autograd import Variable
 from torchvision import transforms
-from models.model_wav import _netG
-from models.model_wav import *
+from models.model import _netG
+from models.model import *
 from DnnFPP.BSD import BSD 
-import cv2
-
 from tensorboardX import SummaryWriter
 
-import numpy as np
+
 
 
 
@@ -38,18 +36,16 @@ parser.add_argument('--losstype',              default='1',     type=str,   meta
 
 
 
-
 parser.add_argument('-e', '--evaluate', dest='evaluate',    action='store_true',    help='evaluate model on validation set')
-# parser.add_argument('--pretrained',     dest='pretrained',  action='store_true',    help='use pre-trained model')
 
-def main():    
+def main():
     global args
     args = parser.parse_args()
     
     outChannel = 1
     inChannel = 3
     
-#     netG = resnet18b() #_netG(in_channel = nChannel, out_channels = nChannel, init_weights=True)
+
     currModelType = args.model    
     netG = _netG(in_channel = inChannel, out_channels = outChannel, init_weights=True, modelType=currModelType)
     netG.cuda()
@@ -113,7 +109,7 @@ def main():
 
     currPatchSize = args.patch_size
     patchInc = 8
-    writername = 'runs/%s/train_30_05_18_sz=%d_LR=%.4f_loss=%s' % (args.model, args.patch_size, args.lr, args.losstype)
+    writername = 'runs/train_30_05_18_model=%s_sz=%d_LR=%.4f_loss=%s' % (args.model, args.patch_size, args.lr, args.losstype)
     writer = SummaryWriter(writername, comment='kmap_training')
     # Train the Model
     isFirstTime = True

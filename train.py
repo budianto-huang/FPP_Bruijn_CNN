@@ -180,9 +180,9 @@ def train(trainloader, netG, criterion, optimizer, epoch, writer):
         # BACKWARD
         loss.backward()
         optimizer.step()
-        totalLoss += loss.data[0]
+        totalLoss += loss.item()
         if (i + 1) % 500 == 0:
-            print ('Epoch [%d/%d], Iter [%d/%d] Loss: %.4f' % (epoch + 1, args.epochs, i + 1, len(trainloader), loss.data[0]))
+            print ('Epoch [%d/%d], Iter [%d/%d] Loss: %.4f' % (epoch + 1, args.epochs, i + 1, len(trainloader), loss.item()))
             #print("type ===========", type(out.data))            
 #             out = torch.cat((out.cpu().data, torch.ones(len(out), 1)), 1)
 #             writer.add_embedding(out, metadata=labels.data, label_img=images.data, global_step=n_iter)
@@ -214,7 +214,7 @@ def eval(trainloader, netG, criterion, epoch, writer):
         
         out = netG(images)        
         loss = criterion(out, labels)
-        avg_loss += loss.data[0].double()
+        avg_loss += loss.item()
 
         corrects += (torch.round(out).data == labels.data).sum() 
         total += (labels.data>0).sum()
@@ -227,8 +227,8 @@ def eval(trainloader, netG, criterion, epoch, writer):
     
 
     
-    writer.add_scalar('loss_eval', avg_loss.data[0], epoch)
-    writer.add_scalar('accuracy', accuracy.data[0], epoch)
+    writer.add_scalar('loss_eval', avg_loss.item(), epoch)
+    writer.add_scalar('accuracy', accuracy.item(), epoch)
 
 def save_checkpoint(state, filename='cp_.pth', modelType = 'B2'):    
     filename = 'saved/' + modelType + '/' + filename
